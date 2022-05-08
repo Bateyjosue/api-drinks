@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import Drinks
+from .models import Drinks, Category
 
 class DrinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drinks
-        fields = ['id', 'name', 'description']
+        fields = ['id', 'name', 'description', 'created']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['name', 'description', 'created']
