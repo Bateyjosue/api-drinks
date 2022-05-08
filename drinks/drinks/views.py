@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .models import Drinks
+from .models import Drinks, Category
 from .serializers import DrinkSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -42,3 +42,16 @@ def drink_detail(request, id):
 
     if request.method == 'DELETE':
         drink.delete()
+
+@api_view(['GET', 'POST'])
+def categories(request):
+    if request.method == 'GET':
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many = True)
+        return JsonResponse({'category': serializer.data})
+
+    elif request.method == 'POST':
+        serializer = CategorySerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.errors, status = status.HTTP_201_CREATED)
