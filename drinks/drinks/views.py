@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from .models import Drinks, Category
-from .serializers import DrinkSerializer
+from .serializers import DrinkSerializer, CategorySerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -42,16 +42,40 @@ def drink_detail(request, id):
 
     if request.method == 'DELETE':
         drink.delete()
+        return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def categories(request):
     if request.method == 'GET':
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many = True)
-        return JsonResponse({'category': serializer.data})
+        return JsonResponse({'categories': serializer.data})
 
     elif request.method == 'POST':
         serializer = CategorySerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.errors, status = status.HTTP_201_CREATED)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def category(request, id):
+    try:
+        category = Category.objects.get(id = id)
+    except Category.DoesNotExist:
+        return Response(status=HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = CategorySerial(category, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return REsponse(serializer.errors, status = status.HTTP_404_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        category.delete()
+        return Response(status=status.HTTP_200_OK)
