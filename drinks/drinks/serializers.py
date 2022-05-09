@@ -9,4 +9,4 @@ class DrinkSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'description', 'created']
+        fields = ['id','name', 'description', 'created']
